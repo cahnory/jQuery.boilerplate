@@ -1,0 +1,43 @@
+#jQuery.boilerplate
+
+A simple jQuery plugin boilerplate
+
+##Private vars
+
++ **plugin**: the plugin instance, one per element.
++ **node**: the DOM element.
++ **element**: the jquery element.
++ **settings**: the plugin settings
+
+##Static vars
+
++ **pluginName**: the name of your plugin. Used in different places in the boilerplate.
+
+##Public methods
+
+###How to call them ?
+
+    $('selector').pluginName('methodName' [, argument…]);
+
+###Are they chainables ?
+Yes but, if a method is returning something (!== undefined)
+the loop on matched elements will be break, the value will be returned, and the chain will break.
+
+###What happened if a method is called before the plugin was initialized ?
+The plugin is initialized with default settings and the function is then called.
+
+###Does the boilerplate has predefined methods ?
+Yes, there are four predefined methods :
+
++ **bind**: same use as the jquery bind methods except it will prefix event names with '-pluginName'.
++ **unbind**: same use as the jquery unbind methods except it will prefix event names with '-pluginName'.
++ **trigger**: same use as the jquery trigger methods except it will prefix event names with '-pluginName'.
++ **settings**: return a copy of the settings object.
+
+##Private methods
+
+###How to call them ?
+They are in the plugin scope so you call them like any javascript function.
+
+###Does the boilerplate has predefined methods ?
+Yes a single one named **init** which is directly called on plugin instantiation. You are free to put the code to process on instantiation in it.
