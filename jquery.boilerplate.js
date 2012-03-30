@@ -1,81 +1,87 @@
 // jQuery Plugin Boilerplate
 // A boilerplate for jumpstarting jQuery plugins development
 // by François Germain
-
 (function($) {
 
-	//	Static private vars
-	var pluginName = 'boilerplate';
+  // Static private vars
+  var
+  // Name of the plugin, edit it
+  pluginName = 'boilerplate',
+  plugin = $[ pluginName ] = function( node, options ) {
+    // Private vars
+    var
+    // Plugin instance
+    instance = this,
+    // jQuery object
+    element = $(node),
+    // settings (user/default)
+    settings = $.extend( {}, {
+      lang: 'en'
+    }, options ),
+    
+    // Private methods
+    // Init the plugin instance
+    init = function() {
+      // code goes here
+    },
+    // Return translated string
+    getText = function( name ) {
+      if ( settings.lang in  plugin.langs && name in plugin.langs[ settings.lang ] ) {
+        return plugin.langs[ settings.lang ][ name ];
+      } else {
+        return name;
+      }
+    };
+    
+    /**
+     * Public methods
+     */
+    instance.methods = {
+      // Return a clone of settings
+      settings: function() {
+        return $.extend( {}, settings );
+      },
+      // Return translated string
+      getText: function( name ) {
+        return getText( name );
+      }
+    };
 
-	$[pluginName] = function(node, options) {
-		// Private vars
-		var
-		plugin		= this,
-		node		= node,
-		element		= $(node),
-		settings	= $.extend({}, {
-			// default settings
-			foo: 'bar'
-		}, options),
-		
-		// Private methods
-		init = function() {
-			// code goes here
-		},
-		// privateMethod exemple
-		privateMethod = function() {
-			// code goes here
-		};
-		
-		/**
-		 * Public methods
-		 */
-		plugin.methods = {
-			bind: function() {
-				arguments[0]	= arguments[0].replace(/([\s ]+|^)([^\s .]+)/g, '$1'+pluginName+'-$2');
-				element.bind.apply(element, arguments);
-			},
-			unbind: function() {
-				arguments[0]	= arguments[0].replace(/([\s ]+|^)([^\s .]+)/g, '$1'+pluginName+'-$2');
-				element.unbind.apply(element, arguments);
-			},
-			trigger: function() {
-				arguments[0]	= arguments[0].replace(/([\s ]+|^)([^\s .]+)/g, '$1'+pluginName+'-$2');
-				element.trigger.apply(element, arguments);
-			},
-			settings: function() {
-				return	$.extend({}, settings);
-			},
-			// publicMethod exemple
-			publicMethod: function() {
-				// code goes here
-			}
-		};
+    // Save plugin instance and init
+    element.data( 'plugin-' + pluginName, instance );
+    init();
+  },
+  call = function( instance, method, args ) {
+    var output = undefined;
+    if ( method in instance.methods ) {
+      // Method is returning something, break the chain.
+      return instance.methods[ method ].apply( instance, args );
+    }
+  };
+  plugin.events = {
+    name: pluginName + '-name'
+  };
+  plugin.langs = {
+    en: { 'name': 'name' },
+    fr: { 'name': 'nom' }
+  };
 
-		// Save plugin instance and init
-		element.data(pluginName, plugin);
-		init();
-	}
-
-	$.fn[pluginName] = function(options) {
-		var	args	= arguments,
-			output	= this;
-        this.each(function() {
-        	// Instanciation
-            if (undefined == (plugin = $(this).data(pluginName))) {
-                var plugin = new $[pluginName](this, options);
-            }
-            
-            // Method calling
-            if (plugin.methods[options]) {
-            	// Method is returning something, break the chain.
-            	if(undefined !== (r = plugin.methods[options].apply( plugin, Array.prototype.slice.call( args, 1 )))) {
-            		output	= r;
-            		return	false;
-            	}
-            }
-        });
-        return	output;
-	}
+  $.fn[ pluginName ] = function( options ) {
+    var
+    args = arguments,
+    output = this;
+    this.each(function() {
+      // Instanciation
+        if ( undefined == ( instance = $( this ).data( 'plugin-' + pluginName ))) {
+            var instance = new plugin( this, options );
+        }
+        
+        // Method calling
+        if(undefined !== ( r = call( instance, options, Array.prototype.slice.call( args, 1 )))) {
+          output = r;
+        }
+    });
+    return output;
+  }
 
 })(jQuery);
