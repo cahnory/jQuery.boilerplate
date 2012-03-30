@@ -52,7 +52,6 @@
     init();
   },
   call = function( instance, method, args ) {
-    var output = undefined;
     if ( method in instance.methods ) {
       // Method is returning something, break the chain.
       return instance.methods[ method ].apply( instance, args );
